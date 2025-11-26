@@ -11,14 +11,24 @@ class BggHttp {
 
   final Client _http;
   final Uri _baseUri;
+  final String? _token;
 
-  BggHttp({Client? http, Uri? baseUri})
+  BggHttp({Client? http, Uri? baseUri, String? token})
       : _http = http ?? Client(),
-        _baseUri = baseUri ?? _defaultBaseUri;
+        _baseUri = baseUri ?? _defaultBaseUri,
+        _token = token;
 
   Future<XmlDocument> get(Iterable<String> pathSegments, {Map<String, dynamic>? queryParameters}) async {
-    var response = await _http.get(_baseUri.replace(
-        pathSegments: _baseUri.pathSegments.toList()..addAll(pathSegments), queryParameters: queryParameters));
+    var headers = <String, String>{};
+    if (_token != null) {
+      headers['Authorization'] = 'Bearer $_token';
+    }
+
+    var response = await _http.get(
+      _baseUri.replace(
+          pathSegments: _baseUri.pathSegments.toList()..addAll(pathSegments), queryParameters: queryParameters),
+      headers: headers,
+    );
     return XmlDocument.parse(response.body);
   }
 

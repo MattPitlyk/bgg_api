@@ -27,7 +27,7 @@ import 'xml/item_ref_decoder.dart';
 class Bgg {
   final BggHttp _http;
 
-  Bgg({BggHttp? http}) : _http = http ?? BggHttp();
+  Bgg({BggHttp? http, String? token}) : _http = http ?? BggHttp(token: token);
 
   /// Retrieve information about a particular board game by [gameId].
   Future<BoardGame?> getBoardGame(int gameId) async {
